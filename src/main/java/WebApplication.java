@@ -8,7 +8,7 @@ public class WebApplication {
     private Board board = new Board();
 
     public void run() {
-        get("/", (req, res) -> createGrid());
+        get("/", (request, response) -> createGrid());
         getMoveAndUpdateBoard();
     }
 
@@ -31,8 +31,8 @@ public class WebApplication {
     }
 
     private void getMoveAndUpdateBoard() {
-        get("/hello/:move", (req, res) -> {
-            String move = req.params("move");
+        get("/hello/:move", (request, response) -> {
+            String move = request.params("move");
             board.updateMove(Integer.parseInt(move), Mark.X);
             return createGrid(); });
     }
