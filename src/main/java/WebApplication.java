@@ -1,9 +1,7 @@
 import game.*;
 import game.Players.HumanPlayer;
 import game.Players.Player;
-
 import java.util.List;
-
 import static spark.Spark.get;
 
 public class WebApplication implements UI {
@@ -16,37 +14,44 @@ public class WebApplication implements UI {
 
 
     public void run() {
-        get("/", (request, response) -> createGrid());
+        get("/", (request, response) -> displayCurrentStateOfGame());
         getMoveAndUpdateBoard();
     }
 
-    private String createGrid() {
+    private String displayCurrentStateOfGame() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i <= board.grid.size() - 1; i++) {
+        buildGrid(stringBuilder);
+        endAndScoreGame(stringBuilder);
+        return stringBuilder.toString();
+    }
 
+    private void buildGrid(StringBuilder stringBuilder) {
+        for (int i = 0; i <= board.grid.size() - 1; i++) {
             if (board.grid.get(i).equals(Mark.EMPTY)) {
                 stringBuilder.append(String.format("<a href='/hello/%s'> %s </a>", i, (i + 1)));
             } else {
                 stringBuilder.append(String.format(" %s ", board.grid.get(i).toString()));
             }
-
-            Integer gridSize = 3;
-            if ((i + 1) % gridSize == 0) {
-                stringBuilder.append("<br>");
-            }
+            formatGrid(stringBuilder, i);
         }
+    }
 
+    private void endAndScoreGame(StringBuilder stringBuilder) {
         if (board.gameIsOver()) {
-            Result gameResult = board.findWinner();
-            String finalResult = gameResult.getResult();
+            String finalResult = board.findWinner().getResult();
             if (finalResult.equals("Tie")) {
                 stringBuilder.append("<br><br> It's a tie!<br>");
             } else {
                 stringBuilder.append(String.format("<br><br> %s wins! <br>", finalResult));
             }
         }
+    }
 
-        return stringBuilder.toString();
+    private void formatGrid(StringBuilder stringBuilder, int i) {
+        Integer gridSize = 3;
+        if ((i + 1) % gridSize == 0) {
+            stringBuilder.append("<br>");
+        }
     }
 
     private void getMoveAndUpdateBoard() {
@@ -56,7 +61,7 @@ public class WebApplication implements UI {
                 switchPlayer(playerOne, playerTwo);
                 Result winner = Result.PLAYER_ONE_WIN;
                 announceWinner(winner);
-                return createGrid();
+                return displayCurrentStateOfGame();
             });
     }
 
