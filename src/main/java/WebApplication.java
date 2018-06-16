@@ -1,9 +1,6 @@
-import game.Board;
-import game.Mark;
+import game.*;
 import game.Players.HumanPlayer;
 import game.Players.Player;
-import game.Result;
-import game.UI;
 
 import java.util.List;
 
@@ -11,10 +8,10 @@ import static spark.Spark.get;
 
 public class WebApplication implements UI {
 
-    private Integer gridSize = 3;
     private Board board = new Board();
-    Player playerOne = new HumanPlayer(this, Mark.X);
-    Player playerTwo = new HumanPlayer(this, Mark.O);
+    private UI ui = this;
+    private Player playerOne = new HumanPlayer(ui, Mark.X);
+    private Player playerTwo = new HumanPlayer(ui, Mark.O);
     private Player currentPlayer = playerOne;
 
 
@@ -25,7 +22,6 @@ public class WebApplication implements UI {
 
     private String createGrid() {
         StringBuilder stringBuilder = new StringBuilder();
-
         for (int i = 0; i <= board.grid.size() - 1; i++) {
 
             if (board.grid.get(i).equals(Mark.EMPTY)) {
@@ -34,25 +30,38 @@ public class WebApplication implements UI {
                 stringBuilder.append(String.format(" %s ", board.grid.get(i).toString()));
             }
 
+            Integer gridSize = 3;
             if ((i + 1) % gridSize == 0) {
                 stringBuilder.append("<br>");
             }
         }
+
+        if (board.gameIsOver()) {
+            Result gameResult = board.findWinner();
+            String finalResult = gameResult.getResult();
+            if (finalResult.equals("Tie")) {
+                stringBuilder.append("<br><br> It's a tie!<br>");
+            } else {
+                stringBuilder.append(String.format("<br><br> %s wins! <br>", finalResult));
+            }
+        }
+
         return stringBuilder.toString();
     }
 
     private void getMoveAndUpdateBoard() {
-        get("/hello/:move", (request, response) -> {
-            String move = request.params("move");
-            board.updateMove(Integer.parseInt(move), currentPlayer.getMark());
-            switchPlayer(playerOne, playerTwo);
-            return createGrid();
-        });
+            get("/hello/:move", (request, response) -> {
+                String move = request.params("move");
+                board.updateMove(Integer.parseInt(move), currentPlayer.getMark());
+                switchPlayer(playerOne, playerTwo);
+                Result winner = Result.PLAYER_ONE_WIN;
+                announceWinner(winner);
+                return createGrid();
+            });
     }
 
 
     private void switchPlayer(Player playerOne, Player playerTwo) {
-        System.out.println("switch player have been called");
         if (currentPlayer == playerOne) {
             currentPlayer = playerTwo;
         } else {
@@ -87,7 +96,6 @@ public class WebApplication implements UI {
 
     @Override
     public void announceWinner(Result winner) {
-
     }
 
     @Override
