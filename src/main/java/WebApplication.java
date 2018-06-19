@@ -12,7 +12,6 @@ public class WebApplication implements UI {
     private Player playerTwo = new HumanPlayer(ui, Mark.O);
     private Player currentPlayer = playerOne;
 
-
     public void run() {
         get("/", (request, response) -> displayCurrentStateOfGame());
         getMoveAndUpdateBoard();
@@ -59,8 +58,6 @@ public class WebApplication implements UI {
                 String move = request.params("move");
                 board.updateMove(Integer.parseInt(move), currentPlayer.getMark());
                 switchPlayer(playerOne, playerTwo);
-                Result winner = Result.PLAYER_ONE_WIN;
-                announceWinner(winner);
                 return displayCurrentStateOfGame();
             });
     }
