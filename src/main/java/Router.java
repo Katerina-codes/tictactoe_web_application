@@ -1,5 +1,6 @@
 import game.*;
 import game.Players.WebApplicationPlayer;
+import spark.Request;
 
 import java.util.List;
 import static spark.Spark.get;
@@ -14,7 +15,15 @@ public class Router implements UI {
     public void run() {
         game.playerSetUp();
         get("/", (request, response) -> displayCurrentStateOfGame());
-        getMoveAndUpdateBoard();
+        get("/makeMove/:move", (request, response) -> makeMoveAndUpdateBoard(request));
+    }
+
+    private Object makeMoveAndUpdateBoard(Request request) {
+        String move = request.params("move");
+        WebApplicationPlayer player = (WebApplicationPlayer) game.currentPlayer;
+        player.receiveMove(move);
+        game.run();
+        return displayCurrentStateOfGame();
     }
 
     private String displayCurrentStateOfGame() {
@@ -33,17 +42,6 @@ public class Router implements UI {
             }
             formatGrid(stringBuilder, i);
         }
-    }
-
-    private void getMoveAndUpdateBoard() {
-        get("/makeMove/:move", (request, response) -> {
-            String move = request.params("move");
-
-            WebApplicationPlayer player = (WebApplicationPlayer) game.currentPlayer;
-            player.receiveMove(move);
-            game.run();
-            return displayCurrentStateOfGame();
-        });
     }
 
     private void scoreGame(StringBuilder stringBuilder) {
