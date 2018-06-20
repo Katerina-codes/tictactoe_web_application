@@ -8,11 +8,11 @@ import spark.servlet.SparkApplication;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class WebApplicationTest {
+public class RouterTest {
 
     public static class WebApplicationTestSparkApplication implements SparkApplication {
         public void init() {
-            new WebApplication().run();
+            new Router().run();
         }
     }
 

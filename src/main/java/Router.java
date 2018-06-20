@@ -4,7 +4,7 @@ import game.Players.WebApplicationPlayer;
 import java.util.List;
 import static spark.Spark.get;
 
-public class WebApplication implements UI {
+public class Router implements UI {
 
     private Board board = new Board();
     private UI ui = this;
