@@ -1,5 +1,4 @@
 import game.*;
-import game.Players.HumanPlayer;
 import game.Players.Player;
 import java.util.List;
 import static spark.Spark.get;
@@ -8,11 +7,11 @@ public class WebApplication implements UI {
 
     private Board board = new Board();
     private UI ui = this;
-    private Player playerOne = new HumanPlayer(ui, Mark.X);
-    private Player playerTwo = new HumanPlayer(ui, Mark.O);
-    private Player currentPlayer = playerOne;
+    Game game = new Game(ui, board);
+
 
     public void run() {
+        game.playerSetUp();
         get("/", (request, response) -> displayCurrentStateOfGame());
         getMoveAndUpdateBoard();
     }
@@ -20,14 +19,14 @@ public class WebApplication implements UI {
     private String displayCurrentStateOfGame() {
         StringBuilder stringBuilder = new StringBuilder();
         buildGrid(stringBuilder);
-        endAndScoreGame(stringBuilder);
+        scoreGame(stringBuilder);
         return stringBuilder.toString();
     }
 
     private void buildGrid(StringBuilder stringBuilder) {
         for (int i = 0; i <= board.grid.size() - 1; i++) {
             if (board.grid.get(i).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("<a href='/hello/%s'> %s </a>", i, (i + 1)));
+                stringBuilder.append(String.format("<a href='/makeMove/%s'> %s </a>", i, (i + 1)));
             } else {
                 stringBuilder.append(String.format(" %s ", board.grid.get(i).toString()));
             }
@@ -35,9 +34,18 @@ public class WebApplication implements UI {
         }
     }
 
-    private void endAndScoreGame(StringBuilder stringBuilder) {
+    private void getMoveAndUpdateBoard() {
+        get("/makeMove/:move", (request, response) -> {
+            String move = request.params("move");
+            board.updateMove(Integer.parseInt(move), game.currentPlayer.getMark());
+            game.switchPlayer(game.playerOne, game.playerTwo);
+            return displayCurrentStateOfGame();
+        });
+    }
+
+    private void scoreGame(StringBuilder stringBuilder) {
         if (board.gameIsOver()) {
-            String finalResult = board.findWinner().getResult();
+            String finalResult = board.findResult().getResult();
             if (finalResult.equals("Tie")) {
                 stringBuilder.append("<br><br> It's a tie!<br>");
             } else {
@@ -53,24 +61,6 @@ public class WebApplication implements UI {
         }
     }
 
-    private void getMoveAndUpdateBoard() {
-            get("/hello/:move", (request, response) -> {
-                String move = request.params("move");
-                board.updateMove(Integer.parseInt(move), currentPlayer.getMark());
-                switchPlayer(playerOne, playerTwo);
-                return displayCurrentStateOfGame();
-            });
-    }
-
-
-    private void switchPlayer(Player playerOne, Player playerTwo) {
-        if (currentPlayer == playerOne) {
-            currentPlayer = playerTwo;
-        } else {
-            currentPlayer = playerOne;
-        }
-    }
-
     @Override
     public void askForGameMode() {
 
@@ -78,7 +68,7 @@ public class WebApplication implements UI {
 
     @Override
     public String getUserChoice() {
-        return null;
+        return "8";
     }
 
     @Override
@@ -93,7 +83,7 @@ public class WebApplication implements UI {
 
     @Override
     public void displayBoard(List<Mark> rows, int size) {
-
+        displayCurrentStateOfGame();
     }
 
     @Override
@@ -107,7 +97,7 @@ public class WebApplication implements UI {
 
     @Override
     public int getBoardSize() {
-        return 0;
+        return 1;
     }
 
     @Override
