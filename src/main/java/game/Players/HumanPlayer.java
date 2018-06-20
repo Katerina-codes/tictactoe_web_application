@@ -23,6 +23,11 @@ public class HumanPlayer implements Player {
         return mark;
     }
 
+    @Override
+    public boolean hasMove() {
+        return true;
+    }
+
     private Integer getMove(Board board) {
         String userMove = ui.getMove(board);
         return Integer.parseInt(String.valueOf(userMove)) - 1;

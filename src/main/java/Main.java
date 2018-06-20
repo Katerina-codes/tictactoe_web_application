@@ -4,5 +4,4 @@ public class Main {
         WebApplication webApplication = new WebApplication();
         webApplication.run();
     }
-
 }

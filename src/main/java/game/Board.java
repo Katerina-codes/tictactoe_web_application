@@ -50,7 +50,7 @@ public class Board {
         return range(0, this.grid.size()).filter(index -> this.grid.get(index).equals(EMPTY)).boxed().collect(toList());
     }
 
-    public Result findWinner() {
+    public Result findResult() {
         if (gameIsTied()) {
             return TIE;
         } else if (playerHasWon(X)) {

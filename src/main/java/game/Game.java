@@ -25,8 +25,6 @@ public class Game {
             displayBoard();
             switchPlayer(playerOne, playerTwo);
         }
-        announceWinner();
-        askIfPlayerWantsToReplay();
     }
 
     public void playerSetUp() {
@@ -62,20 +60,6 @@ public class Game {
 
     private void displayBoard() {
         ui.displayBoard(this.board.grid, this.board.size);
-    }
-
-    private void announceWinner() {
-        Result result = board.findResult();
-        ui.announceWinner(result);
-    }
-
-    private void askIfPlayerWantsToReplay() {
-        if (ui.replay()) {
-            ui.askForBoardSize();
-            int size = ui.getBoardSize();
-            this.board = new Board(size);
-            run();
-        }
     }
 
 }

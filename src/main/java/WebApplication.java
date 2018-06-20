@@ -1,5 +1,6 @@
 import game.*;
-import game.Players.Player;
+import game.Players.WebApplicationPlayer;
+
 import java.util.List;
 import static spark.Spark.get;
 
@@ -37,8 +38,10 @@ public class WebApplication implements UI {
     private void getMoveAndUpdateBoard() {
         get("/makeMove/:move", (request, response) -> {
             String move = request.params("move");
-            board.updateMove(Integer.parseInt(move), game.currentPlayer.getMark());
-            game.switchPlayer(game.playerOne, game.playerTwo);
+
+            WebApplicationPlayer player = (WebApplicationPlayer) game.currentPlayer;
+            player.receiveMove(move);
+            game.run();
             return displayCurrentStateOfGame();
         });
     }
