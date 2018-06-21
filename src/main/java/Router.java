@@ -48,6 +48,8 @@ public class Router implements UI {
         for (int markPosition = 0; markPosition < grid.size(); markPosition++) {
             if (grid.get(markPosition).equals(Mark.EMPTY)) {
                 stringBuilder.append(String.format("%s", (markPosition + 1)));
+            } else {
+                stringBuilder.append(String.format("%s", grid.get(markPosition).toString()));
             }
         }
         return stringBuilder.toString();
