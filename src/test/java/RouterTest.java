@@ -7,6 +7,8 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import spark.servlet.SparkApplication;
 import static game.Mark.EMPTY;
+import static game.Mark.O;
+import static game.Mark.X;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -44,4 +46,13 @@ public class RouterTest {
 
        assertEquals("123", router.createQueryValueForGridState(board.grid));
    }
+
+    @Test
+    public void itFormatsQueryStringFromGridStateWithMarks() {
+        Router router = new Router();
+        Board board = new Board();
+        board.grid = asList(EMPTY, X, O);
+
+        assertEquals("1XO", router.createQueryValueForGridState(board.grid));
+    }
 }

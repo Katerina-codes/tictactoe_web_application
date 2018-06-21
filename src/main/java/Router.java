@@ -8,13 +8,25 @@ public class Router implements UI {
 
     private Board board = new Board();
     private UI ui = this;
-    Game game = new Game(ui, board);
+    private Game game = new Game(ui, board);
 
 
     public void run() {
         game.playerSetUp();
         get("/", (request, response) -> displayCurrentStateOfGame());
         get("/makeMove/:move", (request, response) -> makeMoveAndUpdateBoard(request));
+    }
+
+    public String createQueryValueForGridState(List<Mark> grid) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int markPosition = 0; markPosition < grid.size(); markPosition++) {
+            if (grid.get(markPosition).equals(Mark.EMPTY)) {
+                stringBuilder.append(String.format("%s", (markPosition + 1)));
+            } else {
+                stringBuilder.append(String.format("%s", grid.get(markPosition).toString()));
+            }
+        }
+        return stringBuilder.toString();
     }
 
     private Object makeMoveAndUpdateBoard(Request request) {
@@ -41,16 +53,6 @@ public class Router implements UI {
             }
             formatGrid(stringBuilder, markPosition);
         }
-    }
-
-    public String createQueryValueForGridState(List<Mark> grid) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int markPosition = 0; markPosition < grid.size(); markPosition++) {
-            if (grid.get(markPosition).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("%s", (markPosition + 1)));
-            }
-        }
-        return stringBuilder.toString();
     }
 
     private void scoreGame(StringBuilder stringBuilder) {
