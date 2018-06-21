@@ -9,6 +9,10 @@ public class WebApplicationPlayer implements Player {
     private String currentMove;
     private Mark mark;
 
+    public WebApplicationPlayer(Mark mark) {
+        this.mark = mark;
+    }
+
     public void receiveMove(String moveNumber) {
         moveSet = true;
         currentMove = moveNumber;
@@ -29,9 +33,4 @@ public class WebApplicationPlayer implements Player {
     public boolean hasMove() {
         return moveSet;
     }
-    
-    private WebApplicationPlayer(Mark mark) {
-        this.mark = mark;
-    }
-
 }
