@@ -15,14 +15,14 @@ import static org.junit.Assert.assertTrue;
 
 public class RouterTest {
 
-    public static class WebApplicationTestSparkApplication implements SparkApplication {
+    public static class RouterTestForSparkApplication implements SparkApplication {
         public void init() {
             new Router().run();
         }
     }
 
     @ClassRule
-    public static SparkServer<WebApplicationTestSparkApplication> testServer = new SparkServer<>(WebApplicationTestSparkApplication.class, 4567);
+    public static SparkServer<RouterTestForSparkApplication> testServer = new SparkServer<>(RouterTestForSparkApplication.class, 4567);
 
     @Test
     public void serverRespondsSuccessfully() throws HttpClientException {
