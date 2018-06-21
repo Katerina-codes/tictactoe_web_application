@@ -1,7 +1,6 @@
 import game.*;
 import game.Players.WebApplicationPlayer;
 import spark.Request;
-
 import java.util.List;
 import static spark.Spark.get;
 
@@ -34,14 +33,24 @@ public class Router implements UI {
     }
 
     private void buildGrid(StringBuilder stringBuilder) {
-        for (int i = 0; i <= board.grid.size() - 1; i++) {
-            if (board.grid.get(i).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("<a href='/makeMove/%s'> %s </a>", i, (i + 1)));
+        for (int markPosition = 0; markPosition <= board.grid.size() - 1; markPosition++) {
+            if (board.grid.get(markPosition).equals(Mark.EMPTY)) {
+                stringBuilder.append(String.format("<a href='/makeMove/%s'> %s </a>", markPosition, (markPosition + 1)));
             } else {
-                stringBuilder.append(String.format(" %s ", board.grid.get(i).toString()));
+                stringBuilder.append(String.format(" %s ", board.grid.get(markPosition).toString()));
             }
-            formatGrid(stringBuilder, i);
+            formatGrid(stringBuilder, markPosition);
         }
+    }
+
+    public String createQueryValueForGridState(List<Mark> grid) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int markPosition = 0; markPosition < grid.size(); markPosition++) {
+            if (grid.get(markPosition).equals(Mark.EMPTY)) {
+                stringBuilder.append(String.format("%s", (markPosition + 1)));
+            }
+        }
+        return stringBuilder.toString();
     }
 
     private void scoreGame(StringBuilder stringBuilder) {
