@@ -1,7 +1,9 @@
 import game.*;
 import game.Players.WebApplicationPlayer;
 import spark.Request;
+
 import java.util.List;
+
 import static spark.Spark.get;
 
 public class Router implements UI {
@@ -29,7 +31,7 @@ public class Router implements UI {
         return stringBuilder.toString();
     }
 
-    private Object makeMoveAndUpdateBoard(Request request) {
+    private String makeMoveAndUpdateBoard(Request request) {
         String move = request.params("move");
         WebApplicationPlayer player = (WebApplicationPlayer) game.currentPlayer;
         player.receiveMove(move);

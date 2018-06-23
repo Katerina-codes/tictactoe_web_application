@@ -1,7 +1,6 @@
 package game;
 
 import org.junit.Test;
-
 import static game.Mark.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;

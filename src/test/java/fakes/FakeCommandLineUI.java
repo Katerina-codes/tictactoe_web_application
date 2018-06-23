@@ -35,7 +35,7 @@ public class FakeCommandLineUI implements UI {
     @Override
     public void askForGameMode() {
         this.askForGameModeWasCalled = true;
-}
+    }
 
     @Override
     public String getUserChoice() {

@@ -6,9 +6,7 @@ import game.Board;
 import org.junit.ClassRule;
 import org.junit.Test;
 import spark.servlet.SparkApplication;
-import static game.Mark.EMPTY;
-import static game.Mark.O;
-import static game.Mark.X;
+import static game.Mark.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -38,14 +36,14 @@ public class RouterTest {
         assertTrue((new String(httpResponse.body()).matches(".*1.*2.*3.*4.*5.*6.*7.*8.*9.*")));
     }
 
-   @Test
-   public void itFormatsQueryStringFromEmptyGridState() {
-       Router router = new Router();
-       Board board = new Board();
-       board.grid = asList(EMPTY, EMPTY, EMPTY);
+    @Test
+    public void itFormatsQueryStringFromEmptyGridState() {
+        Router router = new Router();
+        Board board = new Board();
+        board.grid = asList(EMPTY, EMPTY, EMPTY);
 
-       assertEquals("123", router.createQueryValueForGridState(board.grid));
-   }
+        assertEquals("123", router.createQueryValueForGridState(board.grid));
+    }
 
     @Test
     public void itFormatsQueryStringFromGridStateWithMarks() {
