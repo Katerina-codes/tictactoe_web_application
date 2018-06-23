@@ -5,6 +5,8 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
+mainClassName = "game.StartServer"
+
 repositories {
     mavenCentral()
 }
@@ -12,4 +14,5 @@ repositories {
 dependencies {
     compile 'com.sparkjava:spark-core:2.2'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'com.despegar:spark-test:1.1.8'
 }
