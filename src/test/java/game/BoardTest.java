@@ -208,5 +208,11 @@ public class BoardTest {
 
         assertEquals("Tie", board.findResult().getResult());
     }
-}
 
+    @Test
+    public void createsNewBoardFromAString() {
+        Board board = new Board(3, "12X");
+
+        assertEquals(board.grid, asList(EMPTY, EMPTY, X));
+    }
+}
