@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 import static game.Mark.*;
 import static game.Result.TIE;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 
@@ -28,11 +27,6 @@ public class Board {
     public Board(int size, List<Mark> grid) {
         this.size = size;
         this.grid = grid;
-    }
-
-    public Board(int size, String grid) {
-        this.size = size;
-        this.grid = convertToGridOfMarks(grid);
     }
 
     public List<Mark> createGrid() {
@@ -79,21 +73,6 @@ public class Board {
 
     public Mark valueAt(int position) {
         return this.grid.get(position);
-    }
-
-    private List<Mark> convertToGridOfMarks(String grid) {
-        List<String> splitString = asList(grid.split(""));
-        List<Mark> convertedString = new ArrayList<>();
-        for (int i = 0; i < splitString.size(); i++) {
-            if (splitString.get(i).equals("X")) {
-                convertedString.add(i, X);
-            } else if (splitString.get(i).equals("O")) {
-                convertedString.add(i, O);
-            } else {
-                convertedString.add(i, EMPTY);
-            }
-        }
-        return convertedString;
     }
 
     private List<Line> lines() {

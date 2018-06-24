@@ -19,18 +19,6 @@ public class Router implements UI {
         get("/makeMove/:move", (request, response) -> makeMoveAndUpdateBoard(request));
     }
 
-    public String createQueryValueForGridState(List<Mark> grid) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int markPosition = 0; markPosition < grid.size(); markPosition++) {
-            if (grid.get(markPosition).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("%s", (markPosition + 1)));
-            } else {
-                stringBuilder.append(String.format("%s", grid.get(markPosition).toString()));
-            }
-        }
-        return stringBuilder.toString();
-    }
-
     private String makeMoveAndUpdateBoard(Request request) {
         String move = request.params("move");
         WebApplicationPlayer player = (WebApplicationPlayer) game.currentPlayer;
@@ -49,7 +37,7 @@ public class Router implements UI {
     private void buildGrid(StringBuilder stringBuilder) {
         for (int markPosition = 0; markPosition <= board.grid.size() - 1; markPosition++) {
             if (board.grid.get(markPosition).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("<a href='/makeMove/%s'> %s </a>", markPosition, (markPosition + 1)));
+                stringBuilder.append(String.format("<a href='/makeMove/%s?currentBoard=123456789'> %s </a>", markPosition, (markPosition + 1)));
             } else {
                 stringBuilder.append(String.format(" %s ", board.grid.get(markPosition).toString()));
             }
