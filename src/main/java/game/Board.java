@@ -79,13 +79,17 @@ public class Board {
     public Mark getCurrentPlayer() {
         int xCounter = 0;
         int oCounter = 0;
-        for (int i = 0; i < grid.size(); i++) {
-            if (grid.get(i).equals(X)) {
+        for (Mark gridCell : grid) {
+            if (gridCell.equals(X)) {
                 xCounter += 1;
-            } else if (grid.get(i).equals(O)) {
+            } else if (gridCell.equals(O)) {
                 oCounter += 1;
             }
         }
+        return getCurrentPlayerMark(xCounter, oCounter);
+    }
+
+    private Mark getCurrentPlayerMark(int xCounter, int oCounter) {
         if ((availableMoves().size()) == grid.size()) {
             return X;
         } else if (xCounter > oCounter) {
