@@ -8,12 +8,14 @@ import java.util.stream.Stream;
 import static game.Mark.*;
 import static game.Result.TIE;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.IntStream.builder;
 import static java.util.stream.IntStream.range;
 
 public class Board {
 
     public int size;
     public List<Mark> grid;
+    private Mark currentPlayer;
 
     public Board() {
         this(3);
@@ -130,5 +132,13 @@ public class Board {
 
     private boolean gameIsTied() {
         return !playerHasWon(X) && !playerHasWon(O) && !hasAvailableMoves();
+    }
+
+    public Mark getCurrentPlayer() {
+        if ((availableMoves().size()) == grid.size()) {
+            return X;
+        } else {
+            return O;
+        }
     }
 }
