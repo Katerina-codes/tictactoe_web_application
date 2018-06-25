@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import static game.Mark.*;
 import static game.Result.TIE;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.IntStream.builder;
 import static java.util.stream.IntStream.range;
 
 public class Board {
@@ -77,6 +76,25 @@ public class Board {
         return this.grid.get(position);
     }
 
+    public Mark getCurrentPlayer() {
+        int xCounter = 0;
+        int oCounter = 0;
+        for (int i = 0; i < grid.size(); i++) {
+            if (grid.get(i).equals(X)) {
+                xCounter += 1;
+            } else if (grid.get(i).equals(O)) {
+                oCounter += 1;
+            }
+        }
+        if ((availableMoves().size()) == grid.size()) {
+            return X;
+        } else if (xCounter > oCounter) {
+            return O;
+        } else {
+            return X;
+        }
+    }
+
     private List<Line> lines() {
         List<Line> lines = new ArrayList<>();
         lines.addAll(diagonalLines());
@@ -132,13 +150,5 @@ public class Board {
 
     private boolean gameIsTied() {
         return !playerHasWon(X) && !playerHasWon(O) && !hasAvailableMoves();
-    }
-
-    public Mark getCurrentPlayer() {
-        if ((availableMoves().size()) == grid.size()) {
-            return X;
-        } else {
-            return O;
-        }
     }
 }

@@ -215,4 +215,11 @@ public class BoardTest {
 
        assertEquals(X, board.getCurrentPlayer());
     }
+
+    @Test
+    public void getsCurrentPlayerAfterOGoesFirst() {
+        Board board = new Board(2, asList(O, EMPTY, EMPTY, EMPTY));
+
+        assertEquals(X, board.getCurrentPlayer());
+    }
 }
