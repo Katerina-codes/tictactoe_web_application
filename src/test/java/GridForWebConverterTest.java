@@ -1,4 +1,5 @@
 import game.Board;
+import game.GridForWebConverter;
 import org.junit.Test;
 
 import static game.Mark.EMPTY;

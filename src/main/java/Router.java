@@ -1,4 +1,5 @@
-import game.*;
+package game;
+
 import game.Players.WebApplicationPlayer;
 import spark.Request;
 
@@ -11,7 +12,7 @@ public class Router implements UI {
     private Board board = new Board();
     private UI ui = this;
     private Game game = new Game(ui, board);
-
+    private game.GridForWebConverter converter = new game.GridForWebConverter();
 
     public void run() {
         game.playerSetUp();
@@ -20,10 +21,14 @@ public class Router implements UI {
     }
 
     private String makeMoveAndUpdateBoard(Request request) {
-        String move = request.params("move");
+        String move = request.queryParams("move");
+        String currentBoard = request.queryParams("currentBoard");
         WebApplicationPlayer player = (WebApplicationPlayer) game.currentPlayer;
         player.receiveMove(move);
         game.run();
+        Game newGame = new Game(this, new Board(3, converter.convertToGridOfMarks(currentBoard)));
+        newGame.playerSetUp();
+        newGame.run();
         return displayCurrentStateOfGame();
     }
 
@@ -35,11 +40,12 @@ public class Router implements UI {
     }
 
     private void buildGrid(StringBuilder stringBuilder) {
-        for (int markPosition = 0; markPosition <= board.grid.size() - 1; markPosition++) {
-            if (board.grid.get(markPosition).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("<a href='/makeMove/%s?currentBoard=123456789'> %s </a>", markPosition, (markPosition + 1)));
+        String convertedBoard = converter.createQueryValueForGridState(this.board.grid);
+        for (int markPosition = 0; markPosition <= this.board.grid.size() - 1; markPosition++) {
+            if (this.board.grid.get(markPosition).equals(Mark.EMPTY)) {
+                stringBuilder.append(String.format("<a href='/makeMove/%s?move=%s&currentBoard=%s'> %s </a>", markPosition, markPosition, convertedBoard, (markPosition + 1)));
             } else {
-                stringBuilder.append(String.format(" %s ", board.grid.get(markPosition).toString()));
+                stringBuilder.append(String.format(" %s ", this.board.grid.get(markPosition).toString()));
             }
             formatGrid(stringBuilder, markPosition);
         }
@@ -85,7 +91,6 @@ public class Router implements UI {
 
     @Override
     public void displayBoard(List<Mark> rows, int size) {
-        displayCurrentStateOfGame();
     }
 
     @Override
