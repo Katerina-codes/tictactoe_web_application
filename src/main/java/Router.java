@@ -1,5 +1,4 @@
-package game;
-
+import game.*;
 import game.Players.WebApplicationPlayer;
 import spark.Request;
 
@@ -9,49 +8,45 @@ import static spark.Spark.get;
 
 public class Router implements UI {
 
-    private Board board = new Board();
-    private UI ui = this;
-    private Game game = new Game(ui, board);
     private game.GridForWebConverter converter = new game.GridForWebConverter();
 
     public void run() {
-        game.playerSetUp();
-        get("/", (request, response) -> displayCurrentStateOfGame());
+        get("/", (request, response) -> displayCurrentStateOfGame(new Board()));
         get("/makeMove/:move", (request, response) -> makeMoveAndUpdateBoard(request));
     }
 
     private String makeMoveAndUpdateBoard(Request request) {
         String move = request.queryParams("move");
         String currentBoard = request.queryParams("currentBoard");
-        WebApplicationPlayer player = (WebApplicationPlayer) game.currentPlayer;
-        player.receiveMove(move);
-        game.run();
-        Game newGame = new Game(this, new Board(3, converter.convertToGridOfMarks(currentBoard)));
+        Board board = new Board(3, converter.convertToGridOfMarks(currentBoard));
+        Game newGame = new Game(this, board);
         newGame.playerSetUp();
+        WebApplicationPlayer player = (WebApplicationPlayer) newGame.currentPlayer;
+        player.receiveMove(move);
         newGame.run();
-        return displayCurrentStateOfGame();
+        return displayCurrentStateOfGame(board);
     }
 
-    private String displayCurrentStateOfGame() {
+    private String displayCurrentStateOfGame(Board board) {
         StringBuilder stringBuilder = new StringBuilder();
-        buildGrid(stringBuilder);
-        scoreGame(stringBuilder);
+        buildGrid(stringBuilder, board);
+        scoreGame(stringBuilder, board);
         return stringBuilder.toString();
     }
 
-    private void buildGrid(StringBuilder stringBuilder) {
-        String convertedBoard = converter.createQueryValueForGridState(this.board.grid);
-        for (int markPosition = 0; markPosition <= this.board.grid.size() - 1; markPosition++) {
-            if (this.board.grid.get(markPosition).equals(Mark.EMPTY)) {
+    private void buildGrid(StringBuilder stringBuilder, Board board) {
+        String convertedBoard = converter.createQueryValueForGridState(board.grid);
+        for (int markPosition = 0; markPosition <= board.grid.size() - 1; markPosition++) {
+            if (board.grid.get(markPosition).equals(Mark.EMPTY)) {
                 stringBuilder.append(String.format("<a href='/makeMove/%s?move=%s&currentBoard=%s'> %s </a>", markPosition, markPosition, convertedBoard, (markPosition + 1)));
             } else {
-                stringBuilder.append(String.format(" %s ", this.board.grid.get(markPosition).toString()));
+                stringBuilder.append(String.format(" %s ", board.grid.get(markPosition).toString()));
             }
             formatGrid(stringBuilder, markPosition);
         }
     }
 
-    private void scoreGame(StringBuilder stringBuilder) {
+    private void scoreGame(StringBuilder stringBuilder, Board board) {
         if (board.gameIsOver()) {
             String finalResult = board.findResult().getResult();
             if (finalResult.equals("Tie")) {

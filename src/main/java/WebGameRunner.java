@@ -1,5 +1,3 @@
-import game.Router;
-
 public class WebGameRunner {
 
     public static void main(String[] args) {
