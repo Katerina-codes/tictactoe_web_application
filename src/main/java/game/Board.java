@@ -14,7 +14,6 @@ public class Board {
 
     public int size;
     public List<Mark> grid;
-    private Mark currentPlayer;
 
     public Board() {
         this(3);
@@ -76,7 +75,7 @@ public class Board {
         return this.grid.get(position);
     }
 
-    public Mark getCurrentPlayer() {
+    public Mark getCurrentMark() {
         int xCounter = 0;
         int oCounter = 0;
         for (Mark gridCell : grid) {

@@ -50,7 +50,7 @@ public class Game {
     }
 
     private void playMove() {
-        ui.askForMove(currentPlayer.getMark(), this.board.grid);
+        ui.askForMove(this.board.getCurrentMark(), this.board.grid);
         board = currentPlayer.playMove(board);
     }
 

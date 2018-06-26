@@ -213,13 +213,13 @@ public class BoardTest {
     public void getsCurrentPlayerOnEmptyBoard() {
        Board board = new Board(2, asList(EMPTY, EMPTY, EMPTY, EMPTY));
 
-       assertEquals(X, board.getCurrentPlayer());
+       assertEquals(X, board.getCurrentMark());
     }
 
     @Test
     public void getsCurrentPlayerAfterOGoesFirst() {
         Board board = new Board(2, asList(O, EMPTY, EMPTY, EMPTY));
 
-        assertEquals(X, board.getCurrentPlayer());
+        assertEquals(X, board.getCurrentMark());
     }
 }

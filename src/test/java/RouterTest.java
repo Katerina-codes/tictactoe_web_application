@@ -2,7 +2,6 @@ import com.despegar.http.client.GetMethod;
 import com.despegar.http.client.HttpClientException;
 import com.despegar.http.client.HttpResponse;
 import com.despegar.sparkjava.test.SparkServer;
-import game.Router;
 import org.junit.ClassRule;
 import org.junit.Test;
 import spark.servlet.SparkApplication;

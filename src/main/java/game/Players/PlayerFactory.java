@@ -29,7 +29,7 @@ public class PlayerFactory {
         Player[] humanVsUnbeatablePlayer = {new HumanPlayer(ui, playerOne), new UnbeatableComputer(playerTwo)};
         Player[] unbeatablePlayerVsHuman = {new UnbeatableComputer(playerOne), new HumanPlayer(ui, playerTwo)};
         Player[] unbeatableVsUnbeatable = {new UnbeatableComputer(playerOne), new UnbeatableComputer(playerTwo)};
-        Player[] webPlayerVsWebPlayer = {new WebApplicationPlayer(playerOne), new WebApplicationPlayer(playerTwo)};
+        Player[] webPlayerVsWebPlayer = {new WebApplicationPlayer(), new WebApplicationPlayer()};
 
         switch (players) {
             case UI.HUMAN_VS_HUMAN:

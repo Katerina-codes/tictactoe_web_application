@@ -18,11 +18,6 @@ public class UnbeatableComputer implements Player {
     }
 
     @Override
-    public Mark getMark() {
-        return mark;
-    }
-
-    @Override
     public boolean hasMove() {
         return true;
     }
