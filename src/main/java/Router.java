@@ -49,17 +49,21 @@ public class Router implements UI {
     private void scoreGame(StringBuilder stringBuilder, Board board) {
         if (board.gameIsOver()) {
             String finalResult = board.findResult().getResult();
-            if (finalResult.equals("Tie")) {
-                stringBuilder.append("<br><br> It's a tie!<br>");
-            } else {
-                stringBuilder.append(String.format("<br><br> %s wins! <br>", finalResult));
-            }
+            announceResult(stringBuilder, finalResult);
         }
     }
 
-    private void formatGrid(StringBuilder stringBuilder, int i) {
-        Integer gridSize = 3;
-        if ((i + 1) % gridSize == 0) {
+    private void announceResult(StringBuilder stringBuilder, String finalResult) {
+        if (finalResult.equals("Tie")) {
+            stringBuilder.append("<br><br> It's a tie!<br>");
+        } else {
+            stringBuilder.append(String.format("<br><br> %s wins! <br>", finalResult));
+        }
+    }
+
+    private void formatGrid(StringBuilder stringBuilder, int markPosition) {
+        int gridSize = 3;
+        if ((markPosition + 1) % gridSize == 0) {
             stringBuilder.append("<br>");
         }
     }
