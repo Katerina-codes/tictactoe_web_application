@@ -82,4 +82,12 @@ public class PlayerFactoryTest {
         assertTrue(players.get(0) instanceof WebApplicationPlayer);
         assertTrue(players.get(1) instanceof WebApplicationPlayer);
     }
+
+    @Test
+    public void createWebApplicationPlayerVsUnbeatable() {
+        List<Player> players = playerTypes.getPlayerTypes(UI.WEB_PLAYER_VS_UNBEATABLE_PLAYER);
+
+        assertTrue(players.get(0) instanceof WebApplicationPlayer);
+        assertTrue(players.get(1) instanceof UnbeatableComputer);
+    }
 }
