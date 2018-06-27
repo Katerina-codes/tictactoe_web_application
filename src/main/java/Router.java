@@ -28,44 +28,47 @@ public class Router implements UI {
     }
 
     private String displayCurrentStateOfGame(Board board) {
-        StringBuilder stringBuilder = new StringBuilder();
-        buildGrid(stringBuilder, board);
-        scoreGame(stringBuilder, board);
-        return stringBuilder.toString();
+        String responseBody = buildResponse(board);
+        return updateUIWithResult(responseBody, board);
     }
 
-    private void buildGrid(StringBuilder stringBuilder, Board board) {
+    private String buildResponse(Board board) {
+        String responseBody = "";
         String convertedBoard = converter.createQueryValueForGridState(board.grid);
+
         for (int markPosition = 0; markPosition <= board.grid.size() - 1; markPosition++) {
             if (board.grid.get(markPosition).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("<a href='/makeMove/%s?move=%s&currentBoard=%s'> %s </a>", markPosition, markPosition, convertedBoard, (markPosition + 1)));
+                responseBody += String.format("<a href='/makeMove/%s?move=%s&currentBoard=%s'> %s </a>", markPosition, markPosition, convertedBoard, (markPosition + 1));
             } else {
-                stringBuilder.append(String.format(" %s ", board.grid.get(markPosition).toString()));
+                responseBody += String.format(" %s ", board.grid.get(markPosition).toString());
             }
-            formatGrid(stringBuilder, markPosition);
+            responseBody = formatGrid(responseBody, markPosition);
         }
+        return responseBody;
     }
 
-    private void scoreGame(StringBuilder stringBuilder, Board board) {
+    private String updateUIWithResult(String responseBody, Board board) {
         if (board.gameIsOver()) {
             String finalResult = board.findResult().getResult();
-            announceResult(stringBuilder, finalResult);
+            return announceResult(responseBody, finalResult);
         }
+        return responseBody;
     }
 
-    private void announceResult(StringBuilder stringBuilder, String finalResult) {
+    private String announceResult(String responseBody, String finalResult) {
         if (finalResult.equals("Tie")) {
-            stringBuilder.append("<br><br> It's a tie!<br>");
+            return responseBody + "<br><br> It's a tie!<br>";
         } else {
-            stringBuilder.append(String.format("<br><br> %s wins! <br>", finalResult));
+            return responseBody + String.format("<br><br> %s wins! <br>", finalResult);
         }
     }
 
-    private void formatGrid(StringBuilder stringBuilder, int markPosition) {
+    private String formatGrid(String responseBody, int markPosition) {
         int gridSize = 3;
         if ((markPosition + 1) % gridSize == 0) {
-            stringBuilder.append("<br>");
+            responseBody += "<br>";
         }
+        return responseBody;
     }
 
     @Override
