@@ -1,4 +1,5 @@
 import game.*;
+import game.Players.PlayerFactory;
 import game.Players.WebApplicationPlayer;
 import spark.Request;
 
@@ -12,7 +13,12 @@ public class Router implements UI {
 
     public void run() {
         get("/", (request, response) -> displayCurrentStateOfGame(new Board()));
+        get("/newGame/:gameMode", (request, response) -> gameMode(request));
         get("/makeMove/:move", (request, response) -> makeMoveAndUpdateBoard(request));
+    }
+
+    private String gameMode(Request request) {
+        return request.queryParams("gameMode");
     }
 
     private String makeMoveAndUpdateBoard(Request request) {
@@ -34,6 +40,8 @@ public class Router implements UI {
 
     private String buildResponse(Board board) {
         String responseBody = "";
+        responseBody += "<a href='/newGame/8?gameMode=8'> Human Vs Human </a></br>" +
+                "<a href='/newGame/9?gameMode=9'> Human Vs Unbeatable player </a><br>";
         String convertedBoard = converter.createQueryValueForGridState(board.grid);
 
         for (int markPosition = 0; markPosition <= board.grid.size() - 1; markPosition++) {
