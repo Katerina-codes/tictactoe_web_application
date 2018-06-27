@@ -1,4 +1,5 @@
 import game.*;
+import game.Players.PlayerFactory;
 import game.Players.WebApplicationPlayer;
 import spark.Request;
 
@@ -27,8 +28,7 @@ public class Router implements UI {
         String currentBoard = request.queryParams("currentBoard");
         Board board = new Board(3, converter.convertToGridOfMarks(currentBoard));
         Game newGame = new Game(this, board);
-
-        newGame.playerSetUp();
+        newGame.setPlayers(gameMode, new PlayerFactory(this));
         WebApplicationPlayer player = (WebApplicationPlayer) newGame.currentPlayer;
         player.receiveMove(move);
         newGame.run();
@@ -93,7 +93,7 @@ public class Router implements UI {
 
     @Override
     public String getUserChoice() {
-        return "8";
+        return "";
     }
 
     @Override
