@@ -16,7 +16,7 @@ public class GridForWebConverterTest {
         Board board = new Board();
         board.grid = asList(EMPTY, EMPTY, EMPTY);
 
-        assertEquals("123", converter.createQueryValueForGridState(board.grid));
+        assertEquals("123", converter.convertBoardToString(board.grid));
     }
 
     @Test
@@ -25,7 +25,7 @@ public class GridForWebConverterTest {
         Board board = new Board();
         board.grid = asList(EMPTY, X, O);
 
-        assertEquals("1XO", converter.createQueryValueForGridState(board.grid));
+        assertEquals("1XO", converter.convertBoardToString(board.grid));
     }
 
     @Test

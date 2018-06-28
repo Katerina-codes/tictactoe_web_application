@@ -12,7 +12,7 @@ import static java.util.Arrays.asList;
 
 public class GridForWebConverter {
 
-    public String createQueryValueForGridState(List<Mark> grid) {
+    public String convertBoardToString(List<Mark> grid) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int markPosition = 0; markPosition < grid.size(); markPosition++) {
             if (grid.get(markPosition).equals(Mark.EMPTY)) {
