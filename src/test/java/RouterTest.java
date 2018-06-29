@@ -48,4 +48,12 @@ public class RouterTest {
 
         assertTrue((new String(httpResponse.body()).matches(".*1.*X.*3.*4.*5.*O.*7.*8.*9.*")));
     }
+
+    @Test
+    public void GameIsScoredAndXWins() throws HttpClientException {
+        GetMethod request = testServer.get("/makeMove/2?move=2&currentBoard=XX345OO89&gameMode=8", false);
+        HttpResponse httpResponse = testServer.execute(request);
+
+        assertTrue(new String(httpResponse.body()).contains("X wins!"));
+    }
 }
