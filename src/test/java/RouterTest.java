@@ -32,4 +32,12 @@ public class RouterTest {
         HttpResponse httpResponse = testServer.execute(request);
         assertTrue((new String(httpResponse.body()).matches(".*1.*2.*3.*4.*5.*6.*7.*8.*9.*")));
     }
+
+    @Test
+    public void moveMadeAndUpdatedOnBoard() throws HttpClientException {
+        GetMethod request = testServer.get("/makeMove/1?move=1&currentBoard=123456789&gameMode=8", false);
+        HttpResponse httpResponse = testServer.execute(request);
+
+        assertTrue((new String(httpResponse.body()).matches(".*1.*X.*3.*4.*5.*6.*7.*8.*9.*")));
+    }
 }
