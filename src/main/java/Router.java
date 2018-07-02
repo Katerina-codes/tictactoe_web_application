@@ -28,15 +28,15 @@ public class Router implements UI {
         String move = request.queryParams("move");
         String currentBoard = request.queryParams("currentBoard");
         Board board = new Board(3, converter.convertToGridOfMarks(currentBoard));
-        Game game = setUpNewGame(gameMode, move, board);
+        Game game = setUpNewGame(gameMode, board);
+        sendMoveToWebPlayer(move, game);
         game.run();
         return getResponseBody(board, gameMode);
     }
 
-    private Game setUpNewGame(String gameMode, String move, Board board) {
+    private Game setUpNewGame(String gameMode, Board board) {
         Game game = new Game(this, board);
         game.setPlayers(gameMode, new PlayerFactory(this));
-        sendMoveToWebPlayer(move, game);
         return game;
     }
 
@@ -53,7 +53,8 @@ public class Router implements UI {
     private String buildResponse(Board board, String gameMode) {
         String responseBody = "";
         responseBody += "<a href='/newGame/8?gameMode=8'> Human Vs Human </a></br>" +
-                "<a href='/newGame/9?gameMode=9'> Human Vs Unbeatable player </a><br>";
+                "<a href='/newGame/9?gameMode=9'> Human Vs Unbeatable player </a><br>" +
+                "<a href='/newGame/10?gameMode=10'> Unbeatable player Vs Human </a><br>";
         responseBody = buildGrid(board, responseBody, gameMode);
         return responseBody;
     }
