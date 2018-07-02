@@ -1,4 +1,6 @@
 import game.*;
+import game.GridForWebConverter;
+import game.Players.PlayerFactory;
 import game.Players.WebApplicationPlayer;
 import spark.Request;
 
@@ -8,70 +10,93 @@ import static spark.Spark.get;
 
 public class Router implements UI {
 
-    private Board board = new Board();
-    private UI ui = this;
-    private Game game = new Game(ui, board);
-
+    private GridForWebConverter converter = new GridForWebConverter();
 
     public void run() {
-        game.playerSetUp();
-        get("/", (request, response) -> displayCurrentStateOfGame());
+        get("/", (request, response) -> getResponseBody(new Board(), ""));
+        get("/newGame/:gameMode", (request, response) -> gameMode(request));
         get("/makeMove/:move", (request, response) -> makeMoveAndUpdateBoard(request));
     }
 
-    public String createQueryValueForGridState(List<Mark> grid) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int markPosition = 0; markPosition < grid.size(); markPosition++) {
-            if (grid.get(markPosition).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("%s", (markPosition + 1)));
-            } else {
-                stringBuilder.append(String.format("%s", grid.get(markPosition).toString()));
-            }
-        }
-        return stringBuilder.toString();
+    private String gameMode(Request request) {
+        String gameMode = request.queryParams("gameMode");
+        return getResponseBody(new Board(), gameMode);
     }
 
     private String makeMoveAndUpdateBoard(Request request) {
-        String move = request.params("move");
+        String gameMode = request.queryParams("gameMode");
+        String move = request.queryParams("move");
+        String currentBoard = request.queryParams("currentBoard");
+        Board board = new Board(3, converter.convertToGridOfMarks(currentBoard));
+        Game game = setUpNewGame(gameMode, move, board);
+        game.run();
+        return getResponseBody(board, gameMode);
+    }
+
+    private Game setUpNewGame(String gameMode, String move, Board board) {
+        Game game = new Game(this, board);
+        game.setPlayers(gameMode, new PlayerFactory(this));
+        sendMoveToWebPlayer(move, game);
+        return game;
+    }
+
+    private void sendMoveToWebPlayer(String move, Game game) {
         WebApplicationPlayer player = (WebApplicationPlayer) game.currentPlayer;
         player.receiveMove(move);
-        game.run();
-        return displayCurrentStateOfGame();
     }
 
-    private String displayCurrentStateOfGame() {
-        StringBuilder stringBuilder = new StringBuilder();
-        buildGrid(stringBuilder);
-        scoreGame(stringBuilder);
-        return stringBuilder.toString();
+    private String getResponseBody(Board board, String gameMode) {
+        String responseBody = buildResponse(board, gameMode);
+        return updateUIWithResult(responseBody, board);
     }
 
-    private void buildGrid(StringBuilder stringBuilder) {
-        for (int markPosition = 0; markPosition <= board.grid.size() - 1; markPosition++) {
-            if (board.grid.get(markPosition).equals(Mark.EMPTY)) {
-                stringBuilder.append(String.format("<a href='/makeMove/%s'> %s </a>", markPosition, (markPosition + 1)));
+    private String buildResponse(Board board, String gameMode) {
+        String responseBody = "";
+        responseBody += "<a href='/newGame/8?gameMode=8'> Human Vs Human </a></br>" +
+                "<a href='/newGame/9?gameMode=9'> Human Vs Unbeatable player </a><br>";
+        responseBody = buildGrid(board, responseBody, gameMode);
+        return responseBody;
+    }
+
+    private String buildGrid(Board board, String responseBody, String gameMode) {
+        String convertedBoard = converter.convertBoardToString(board.grid);
+        responseBody = createAndFormatGrid(board, responseBody, gameMode, convertedBoard);
+        return responseBody;
+    }
+
+    private String createAndFormatGrid(Board board, String responseBody, String gameMode, String convertedBoard) {
+        for (int cell = 0; cell <= board.grid.size() - 1; cell++) {
+            if (board.grid.get(cell).equals(Mark.EMPTY)) {
+                responseBody += String.format("<a href='/makeMove/%s?move=%s&currentBoard=%s&gameMode=%s'> %s </a>", cell, cell, convertedBoard, gameMode, (cell + 1));
             } else {
-                stringBuilder.append(String.format(" %s ", board.grid.get(markPosition).toString()));
+                responseBody += String.format(" %s ", board.grid.get(cell).toString());
             }
-            formatGrid(stringBuilder, markPosition);
+            responseBody = formatGrid(responseBody, cell);
         }
+        return responseBody;
     }
 
-    private void scoreGame(StringBuilder stringBuilder) {
+    private String formatGrid(String responseBody, int markPosition) {
+        int gridSize = 3;
+        if ((markPosition + 1) % gridSize == 0) {
+            responseBody += "<br>";
+        }
+        return responseBody;
+    }
+
+    private String updateUIWithResult(String responseBody, Board board) {
         if (board.gameIsOver()) {
             String finalResult = board.findResult().getResult();
-            if (finalResult.equals("Tie")) {
-                stringBuilder.append("<br><br> It's a tie!<br>");
-            } else {
-                stringBuilder.append(String.format("<br><br> %s wins! <br>", finalResult));
-            }
+            return announceResult(responseBody, finalResult);
         }
+        return responseBody;
     }
 
-    private void formatGrid(StringBuilder stringBuilder, int i) {
-        Integer gridSize = 3;
-        if ((i + 1) % gridSize == 0) {
-            stringBuilder.append("<br>");
+    private String announceResult(String responseBody, String finalResult) {
+        if (finalResult.equals("Tie")) {
+            return responseBody + "<br><br> It's a tie!<br>";
+        } else {
+            return responseBody + String.format("<br><br> %s wins! <br>", finalResult);
         }
     }
 
@@ -82,7 +107,7 @@ public class Router implements UI {
 
     @Override
     public String getUserChoice() {
-        return "8";
+        return "";
     }
 
     @Override
@@ -97,7 +122,6 @@ public class Router implements UI {
 
     @Override
     public void displayBoard(List<Mark> rows, int size) {
-        displayCurrentStateOfGame();
     }
 
     @Override

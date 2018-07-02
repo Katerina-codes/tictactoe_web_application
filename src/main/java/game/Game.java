@@ -42,7 +42,7 @@ public class Game {
         }
     }
 
-    private void setPlayers(String gameMode, PlayerFactory playerTypes) {
+    public void setPlayers(String gameMode, PlayerFactory playerTypes) {
         List<Player> players = playerTypes.getPlayerTypes(gameMode);
         playerOne = players.get(0);
         playerTwo = players.get(1);
@@ -50,7 +50,7 @@ public class Game {
     }
 
     private void playMove() {
-        ui.askForMove(currentPlayer.getMark(), this.board.grid);
+        ui.askForMove(this.board.getCurrentMark(), this.board.grid);
         board = currentPlayer.playMove(board);
     }
 

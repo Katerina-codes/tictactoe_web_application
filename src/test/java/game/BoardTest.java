@@ -208,5 +208,18 @@ public class BoardTest {
 
         assertEquals("Tie", board.findResult().getResult());
     }
-}
 
+    @Test
+    public void getsCurrentPlayerOnEmptyBoard() {
+       Board board = new Board(2, asList(EMPTY, EMPTY, EMPTY, EMPTY));
+
+       assertEquals(X, board.getCurrentMark());
+    }
+
+    @Test
+    public void getsCurrentPlayerAfterOGoesFirst() {
+        Board board = new Board(2, asList(O, EMPTY, EMPTY, EMPTY));
+
+        assertEquals(X, board.getCurrentMark());
+    }
+}

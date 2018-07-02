@@ -2,12 +2,9 @@ import com.despegar.http.client.GetMethod;
 import com.despegar.http.client.HttpClientException;
 import com.despegar.http.client.HttpResponse;
 import com.despegar.sparkjava.test.SparkServer;
-import game.Board;
 import org.junit.ClassRule;
 import org.junit.Test;
 import spark.servlet.SparkApplication;
-import static game.Mark.*;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -37,20 +34,26 @@ public class RouterTest {
     }
 
     @Test
-    public void itFormatsQueryStringFromEmptyGridState() {
-        Router router = new Router();
-        Board board = new Board();
-        board.grid = asList(EMPTY, EMPTY, EMPTY);
+    public void moveMadeAndUpdatedOnBoard() throws HttpClientException {
+        GetMethod request = testServer.get("/makeMove/1?move=1&currentBoard=123456789&gameMode=8", false);
+        HttpResponse httpResponse = testServer.execute(request);
 
-        assertEquals("123", router.createQueryValueForGridState(board.grid));
+        assertTrue((new String(httpResponse.body()).matches(".*1.*X.*3.*4.*5.*6.*7.*8.*9.*")));
     }
 
     @Test
-    public void itFormatsQueryStringFromGridStateWithMarks() {
-        Router router = new Router();
-        Board board = new Board();
-        board.grid = asList(EMPTY, X, O);
+    public void PlayerTwoMakesAMove() throws HttpClientException {
+        GetMethod request = testServer.get("/makeMove/5?move=5&currentBoard=1X3456789&gameMode=8", false);
+        HttpResponse httpResponse = testServer.execute(request);
 
-        assertEquals("1XO", router.createQueryValueForGridState(board.grid));
+        assertTrue((new String(httpResponse.body()).matches(".*1.*X.*3.*4.*5.*O.*7.*8.*9.*")));
+    }
+
+    @Test
+    public void GameIsScoredAndXWins() throws HttpClientException {
+        GetMethod request = testServer.get("/makeMove/2?move=2&currentBoard=XX345OO89&gameMode=8", false);
+        HttpResponse httpResponse = testServer.execute(request);
+
+        assertTrue(new String(httpResponse.body()).contains("X wins!"));
     }
 }

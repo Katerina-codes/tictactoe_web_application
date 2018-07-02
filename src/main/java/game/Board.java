@@ -75,6 +75,29 @@ public class Board {
         return this.grid.get(position);
     }
 
+    public Mark getCurrentMark() {
+        int xCounter = 0;
+        int oCounter = 0;
+        for (Mark gridCell : grid) {
+            if (gridCell.equals(X)) {
+                xCounter += 1;
+            } else if (gridCell.equals(O)) {
+                oCounter += 1;
+            }
+        }
+        return getCurrentPlayerMark(xCounter, oCounter);
+    }
+
+    private Mark getCurrentPlayerMark(int xCounter, int oCounter) {
+        if ((availableMoves().size()) == grid.size()) {
+            return X;
+        } else if (xCounter > oCounter) {
+            return O;
+        } else {
+            return X;
+        }
+    }
+
     private List<Line> lines() {
         List<Line> lines = new ArrayList<>();
         lines.addAll(diagonalLines());
