@@ -31,6 +31,7 @@ public class PlayerFactory {
         Player[] unbeatableVsUnbeatable = {new UnbeatableComputer(playerOne), new UnbeatableComputer(playerTwo)};
         Player[] webPlayerVsWebPlayer = {new WebApplicationPlayer(), new WebApplicationPlayer()};
         Player[] webPlayerVsUnbeatablePLayer = {new WebApplicationPlayer(), new UnbeatableComputer(playerTwo)};
+        Player[] unbeatablePlayerVsWebPlayer = {new UnbeatableComputer(playerOne), new WebApplicationPlayer()};
 
         switch (players) {
             case UI.HUMAN_VS_HUMAN:
@@ -51,6 +52,8 @@ public class PlayerFactory {
                 return Arrays.asList(webPlayerVsWebPlayer);
             case UI.WEB_PLAYER_VS_UNBEATABLE_PLAYER:
                 return Arrays.asList(webPlayerVsUnbeatablePLayer);
+            case UI.UNBEATABLE_PLAYER_VS_WEB_PLAYER:
+                return Arrays.asList(unbeatablePlayerVsWebPlayer);
             default:
                 throw new RuntimeException("Unsupported player type");
         }

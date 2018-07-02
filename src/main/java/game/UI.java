@@ -12,6 +12,7 @@ public interface UI {
     String UNBEATABLE_PLAYER_VS_UNBEATABLE_PLAYER = "7";
     String WEB_PLAYER_VS_WEB_PLAYER = "8";
     String WEB_PLAYER_VS_UNBEATABLE_PLAYER = "9";
+    String UNBEATABLE_PLAYER_VS_WEB_PLAYER = "10";
     int THREE_BY_THREE = 3;
 
     void askForGameMode();
