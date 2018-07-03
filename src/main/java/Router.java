@@ -19,7 +19,7 @@ public class Router implements UI {
     }
 
     private String gameMode(Request request) {
-        String gameMode = request.queryParams("gameMode");
+        String gameMode = fromParams(request, "gameMode");
         Board board = new Board();
         setUpNewGame(gameMode, board);
         Game game = setUpNewGame(gameMode, board);
@@ -28,9 +28,9 @@ public class Router implements UI {
     }
 
     private String makeMoveAndUpdateBoard(Request request) {
-        String gameMode = request.queryParams("gameMode");
-        String move = request.queryParams("move");
-        String currentBoard = request.queryParams("currentBoard");
+        String gameMode = fromParams(request, "gameMode");
+        String move = fromParams(request, "move");
+        String currentBoard = fromParams(request, "currentBoard");
         Board board = new Board(3, converter.convertToGridOfMarks(currentBoard));
         Game game = setUpNewGame(gameMode, board);
         if (game.getCurrentPlayer() instanceof WebApplicationPlayer)  {
@@ -39,6 +39,10 @@ public class Router implements UI {
         }
         game.run();
         return getResponseBody(board, gameMode);
+    }
+
+    private String fromParams(Request request, String param) {
+        return request.queryParams(param);
     }
 
     private Game setUpNewGame(String gameMode, Board board) {
