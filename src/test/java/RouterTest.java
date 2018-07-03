@@ -30,7 +30,7 @@ public class RouterTest {
     public void responseBodyContainsGridNumbers() throws HttpClientException {
         GetMethod request = testServer.get("/", false);
         HttpResponse httpResponse = testServer.execute(request);
-        assertTrue((new String(httpResponse.body()).matches(".*1.*2.*3.*4.*5.*6.*7.*8.*9.*")));
+        assertTrue((toString(httpResponse).matches(".*1.*2.*3.*4.*5.*6.*7.*8.*9.*")));
     }
 
     @Test
@@ -38,22 +38,35 @@ public class RouterTest {
         GetMethod request = testServer.get("/makeMove/1?move=1&currentBoard=123456789&gameMode=8", false);
         HttpResponse httpResponse = testServer.execute(request);
 
-        assertTrue((new String(httpResponse.body()).matches(".*1.*X.*3.*4.*5.*6.*7.*8.*9.*")));
+        assertTrue((toString(httpResponse).matches(".*1.*X.*3.*4.*5.*6.*7.*8.*9.*")));
     }
 
     @Test
-    public void PlayerTwoMakesAMove() throws HttpClientException {
+    public void playerTwoMakesAMove() throws HttpClientException {
         GetMethod request = testServer.get("/makeMove/5?move=5&currentBoard=1X3456789&gameMode=8", false);
         HttpResponse httpResponse = testServer.execute(request);
 
-        assertTrue((new String(httpResponse.body()).matches(".*1.*X.*3.*4.*5.*O.*7.*8.*9.*")));
+        assertTrue((toString(httpResponse).matches(".*1.*X.*3.*4.*5.*O.*7.*8.*9.*")));
     }
 
     @Test
-    public void GameIsScoredAndXWins() throws HttpClientException {
+    public void gameIsScoredAndXWins() throws HttpClientException {
         GetMethod request = testServer.get("/makeMove/2?move=2&currentBoard=XX345OO89&gameMode=8", false);
         HttpResponse httpResponse = testServer.execute(request);
 
-        assertTrue(new String(httpResponse.body()).contains("X wins!"));
+        assertTrue(toString(httpResponse).contains("X wins!"));
+    }
+
+    @Test
+    public void unbeatablePlayerMakesAMove() throws HttpClientException {
+        GetMethod request = testServer.get("/makeMove/1?move=1&currentBoard=X23456789&gameMode=9", false);
+        HttpResponse httpResponse = testServer.execute(request);
+
+        assertTrue(toString(httpResponse).contains("X"));
+        assertTrue(toString(httpResponse).contains("O"));
+    }
+
+    private String toString(HttpResponse httpResponse) {
+        return new String(httpResponse.body());
     }
 }
