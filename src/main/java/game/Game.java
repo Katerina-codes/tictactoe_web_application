@@ -46,7 +46,7 @@ public class Game {
         List<Player> players = playerTypes.getPlayerTypes(gameMode);
         playerOne = players.get(0);
         playerTwo = players.get(1);
-        currentPlayer = playerOne;
+        currentPlayer = getCurrentPlayer();
     }
 
     public Player getCurrentPlayer() {
