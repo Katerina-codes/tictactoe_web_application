@@ -20,7 +20,11 @@ public class Router implements UI {
 
     private String gameMode(Request request) {
         String gameMode = request.queryParams("gameMode");
-        return getResponseBody(new Board(), gameMode);
+        Board board = new Board();
+        setUpNewGame(gameMode, board);
+        Game game = setUpNewGame(gameMode, board);
+        game.run();
+        return getResponseBody(board, gameMode);
     }
 
     private String makeMoveAndUpdateBoard(Request request) {
@@ -29,7 +33,10 @@ public class Router implements UI {
         String currentBoard = request.queryParams("currentBoard");
         Board board = new Board(3, converter.convertToGridOfMarks(currentBoard));
         Game game = setUpNewGame(gameMode, board);
-        sendMoveToWebPlayer(move, game);
+        if (game.getCurrentPlayer() instanceof WebApplicationPlayer)  {
+            game.currentPlayer = game.getCurrentPlayer();
+            sendMoveToWebPlayer(move, game);
+        }
         game.run();
         return getResponseBody(board, gameMode);
     }

@@ -49,6 +49,14 @@ public class Game {
         currentPlayer = playerOne;
     }
 
+    public Player getCurrentPlayer() {
+        if (board.getCurrentMark().equals(Mark.X)) {
+            return playerOne;
+        } else {
+            return playerTwo;
+        }
+    }
+
     private void playMove() {
         ui.askForMove(this.board.getCurrentMark(), this.board.grid);
         board = currentPlayer.playMove(board);
